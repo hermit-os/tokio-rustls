@@ -1,6 +1,8 @@
 use std::io;
 #[cfg(unix)]
 use std::os::unix::io::{AsRawFd, RawFd};
+#[cfg(target_os = "hermit")]
+use std::os::hermit::io::{AsRawFd, RawFd};
 #[cfg(windows)]
 use std::os::windows::io::{AsRawSocket, RawSocket};
 use std::pin::Pin;
@@ -42,7 +44,7 @@ impl<IO> TlsStream<IO> {
     }
 }
 
-#[cfg(unix)]
+#[cfg(any(unix, target_os = "hermit"))]
 impl<S> AsRawFd for TlsStream<S>
 where
     S: AsRawFd,
